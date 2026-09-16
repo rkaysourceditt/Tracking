@@ -1,52 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>RKAYSOURCEDITT™ Tracking</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RKAYSOURCEDITT™ Tracking</title>
+
+<style>
+body{
+    background:#000;
+    color:#fff;
+    font-family:Arial,sans-serif;
+    text-align:center;
+    padding:40px 20px;
+}
+
+h1{
+    color:red;
+    margin-bottom:30px;
+}
+
+input{
+    width:90%;
+    max-width:400px;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 25px;
+    background:red;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+#result{
+    margin-top:30px;
+    font-size:18px;
+}
+</style>
 </head>
+
 <body>
-  <h1>Track Your Order</h1>
 
-  <input type="text" id="trackingInput" placeholder="Enter Tracking Number">
-  <button onclick="trackOrder()">Track</button>
+<h1>RKAYSOURCEDITT™ Order Tracking</h1>
 
-  <div id="result"></div>
+<input type="text" id="trackingInput" placeholder="Enter Tracking Number">
+<br>
+<button onclick="trackOrder()">Track Order</button>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+<div id="result"></div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDFtovyPYAdrJ91m3yHopMnJvH_qxBZW6M",
-      authDomain: "trackflow-d3351.firebaseapp.com",
-      projectId: "trackflow-d3351",
-      storageBucket: "trackflow-d3351.firebasestorage.app",
-      messagingSenderId: "630449629739",
-      appId: "1:630449629739:web:f3bc1bc546134170f5186e",
-      measurementId: "G-5WSYVW9JTP"
-    };
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+const firebaseConfig = {
+  apiKey: "AIzaSyDFtovyPYAdrJ91m3yHopMnJvH_qxBZW6M",
+  authDomain: "trackflow-d3351.firebaseapp.com",
+  projectId: "trackflow-d3351",
+  storageBucket: "trackflow-d3351.firebasestorage.app",
+  messagingSenderId: "630449629739",
+  appId: "1:630449629739:web:f3bc1bc546134170f5186e",
+  measurementId: "G-5WSYVW9JTP"
+};
 
-    window.trackOrder = async function () {
-      const tracking = document.getElementById("trackingInput").value;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-      const docRef = doc(db, "tracking", tracking);
-      const docSnap = await getDoc(docRef);
+window.trackOrder = async function () {
 
-      if (docSnap.exists()) {
+    const tracking = document.getElementById("trackingInput").value.trim();
+
+    const docRef = doc(db, "tracking", tracking);
+    const docSnap = await getDoc(docRef);
+
+    if(docSnap.exists()){
+
         const data = docSnap.data();
 
         document.getElementById("result").innerHTML = `
-          <h2>Status: ${data.Status}</h2>
-          <p>Courier: ${data.Courier}</p>
-          <p>Last Update: ${data.Lastupdate}</p>
+            <h2>Status: ${data.Status}</h2>
+            <p>Courier: ${data.Courier}</p>
+            <p>Last Update: ${data.Lastupdate}</p>
         `;
-      } else {
-        document.getElementById("result").innerHTML =
-          "<h2>Tracking number not found</h2>";
-      }
+
+    } else {
+
+        document.getElementById("result").innerHTML = `
+            <h2>Tracking Number Not Found</h2>
+        `;
+
     }
-  </script>
+}
+</script>
+
 </body>
 </html>
