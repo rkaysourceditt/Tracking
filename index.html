@@ -88,8 +88,9 @@ if(docSnap.exists()){
 
     document.getElementById("result").innerHTML = `
         <h2>Status: ${data.Status}</h2>
-        <p>Courier: ${data.Courier}</p>
-        <p>Last Update: ${data.Lastupdate}</p>
+        <p><strong>Courier:</strong> ${data.Courier}</p>
+        <p><strong>Estimated Delivery:</strong> ${data["Estimate Delivery"]}</p>
+        <p><strong>Last Update:</strong> ${data.Lastupdate}</p>
     `;
 
 } else {
