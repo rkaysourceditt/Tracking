@@ -79,7 +79,7 @@ window.trackOrder = async function () {
     
     const tracking = document.getElementById("trackingInput").value.trim();
 
-    const docRef = doc(db, "tracking", tracking);
+    const docRef = doc(db, "orders", "tracking", tracking);
     const docSnap = await getDoc(docRef);
 
     if(docSnap.exists()){
