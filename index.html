@@ -40,13 +40,8 @@ button{
     font-size:18px;
 }
 
-button:hover{
-    opacity:0.9;
-}
-
 #result{
     margin-top:30px;
-    font-size:20px;
 }
 
 .card{
@@ -54,8 +49,8 @@ button:hover{
     margin:20px auto;
     padding:20px;
     background:#111;
-    border:1px solid #222;
     border-radius:12px;
+    border:1px solid #222;
 }
 </style>
 </head>
@@ -97,7 +92,7 @@ window.trackOrder = async function() {
         return;
     }
 
-    const docRef = doc(db, "orders", tracking);
+    const docRef = doc(db, "tracking", tracking);
     const docSnap = await getDoc(docRef);
 
     if(docSnap.exists()){
@@ -105,13 +100,13 @@ window.trackOrder = async function() {
         const data = docSnap.data();
 
         document.getElementById("result").innerHTML = `
-            <div class="card">
-                <h2>${tracking}</h2>
-                <p><strong>Status:</strong> ${data.Status}</p>
-                <p><strong>Courier:</strong> ${data.Courier}</p>
-                <p><strong>Estimated Delivery:</strong> ${data["Estimate Delivery"]}</p>
-                <p><strong>Last Update:</strong> ${data.Lastupdate}</p>
-            </div>
+        <div class="card">
+            <h2>${tracking}</h2>
+            <p><strong>Status:</strong> ${data.Status}</p>
+            <p><strong>Courier:</strong> ${data.Courier}</p>
+            <p><strong>Estimated Delivery:</strong> ${data["Estimate Delivery"]}</p>
+            <p><strong>Last Update:</strong> ${data.Lastupdate}</p>
+        </div>
         `;
 
     } else {
