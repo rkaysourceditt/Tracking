@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RKAYSOURCEDITT™ Tracking</title>
+<title>RKAYSOURCEDITT™ Order Tracking</title>
 
 <style>
 body{
@@ -17,38 +17,52 @@ body{
 h1{
     color:red;
     margin-bottom:30px;
+    font-size:42px;
 }
 
 input{
     width:90%;
     max-width:400px;
-    padding:12px;
+    padding:15px;
     border:none;
-    border-radius:8px;
-    font-size:16px;
+    border-radius:10px;
+    font-size:18px;
 }
 
 button{
     margin-top:15px;
-    padding:12px 25px;
+    padding:15px 30px;
     background:red;
     color:white;
     border:none;
-    border-radius:8px;
+    border-radius:10px;
     cursor:pointer;
-    font-size:16px;
+    font-size:18px;
+}
+
+button:hover{
+    opacity:0.9;
 }
 
 #result{
     margin-top:30px;
-    font-size:18px;
+    font-size:20px;
+}
+
+.card{
+    max-width:500px;
+    margin:20px auto;
+    padding:20px;
+    background:#111;
+    border:1px solid #222;
+    border-radius:12px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>RKAYSOURCEDITT™ Order Tracking</h1>
+<h1>RKAYSOURCEDITT™<br>Order Tracking</h1>
 
 <input type="text" id="trackingInput" placeholder="Enter Tracking Number">
 <br>
@@ -73,33 +87,39 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.trackOrder = async function () {
-  document.getElementById("result").innerHTML =
-    "<h2>Button works</h2>";
-    
+window.trackOrder = async function() {
+
     const tracking = document.getElementById("trackingInput").value.trim();
 
-    const docRef = doc(db, "orders", "tracking", tracking);
+    if(!tracking){
+        document.getElementById("result").innerHTML =
+        "<h2>Please enter a tracking number</h2>";
+        return;
+    }
+
+    const docRef = doc(db, "orders", tracking);
     const docSnap = await getDoc(docRef);
 
-if(docSnap.exists()){
+    if(docSnap.exists()){
 
-    const data = docSnap.data();
+        const data = docSnap.data();
 
-    document.getElementById("result").innerHTML = `
-        <h2>Status: ${data.Status}</h2>
-        <p><strong>Courier:</strong> ${data.Courier}</p>
-        <p><strong>Estimated Delivery:</strong> ${data["Estimate Delivery"]}</p>
-        <p><strong>Last Update:</strong> ${data.Lastupdate}</p>
-    `;
+        document.getElementById("result").innerHTML = `
+            <div class="card">
+                <h2>${tracking}</h2>
+                <p><strong>Status:</strong> ${data.Status}</p>
+                <p><strong>Courier:</strong> ${data.Courier}</p>
+                <p><strong>Estimated Delivery:</strong> ${data["Estimate Delivery"]}</p>
+                <p><strong>Last Update:</strong> ${data.Lastupdate}</p>
+            </div>
+        `;
 
-} else {
+    } else {
 
-    document.getElementById("result").innerHTML = `
-        <h2>Tracking Number Not Found</h2>
-    `;
+        document.getElementById("result").innerHTML =
+        "<h2>Tracking Number Not Found</h2>";
 
-}
+    }
 }
 </script>
 
