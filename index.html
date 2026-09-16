@@ -6,52 +6,115 @@
 <title>RKAYSOURCEDITT™ Order Tracking</title>
 
 <style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
 body{
-    background:#000;
-    color:#fff;
-    font-family:Arial,sans-serif;
-    text-align:center;
-    padding:40px 20px;
+background:#000;
+color:#fff;
+text-align:center;
+padding:40px 20px;
 }
 
 h1{
-    color:red;
-    margin-bottom:30px;
-    font-size:42px;
+color:red;
+font-size:48px;
+margin-bottom:30px;
 }
 
 input{
-    width:90%;
-    max-width:400px;
-    padding:15px;
-    border:none;
-    border-radius:10px;
-    font-size:18px;
+width:90%;
+max-width:500px;
+padding:18px;
+font-size:20px;
+border:none;
+border-radius:12px;
+outline:none;
 }
 
 button{
-    margin-top:15px;
-    padding:15px 30px;
-    background:red;
-    color:white;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:18px;
+margin-top:20px;
+padding:18px 40px;
+background:red;
+color:white;
+border:none;
+border-radius:12px;
+font-size:20px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+opacity:.9;
 }
 
 #result{
-    margin-top:30px;
+margin-top:35px;
 }
 
 .card{
-    max-width:500px;
-    margin:20px auto;
-    padding:20px;
-    background:#111;
-    border-radius:12px;
-    border:1px solid #222;
+max-width:650px;
+margin:auto;
+background:#0d0d0d;
+border:1px solid #222;
+border-radius:20px;
+padding:30px;
+box-shadow:0 0 25px rgba(255,0,0,.25);
 }
+
+.order-found{
+color:#00ff66;
+font-size:28px;
+margin-bottom:20px;
+}
+
+.tracking-number{
+font-size:42px;
+font-weight:bold;
+margin-bottom:25px;
+}
+
+.info{
+font-size:24px;
+margin:18px 0;
+}
+
+.progress{
+margin-top:30px;
+text-align:left;
+max-width:350px;
+margin-left:auto;
+margin-right:auto;
+}
+
+.complete{
+color:#00ff66;
+font-size:22px;
+padding:8px 0;
+}
+
+.pending{
+color:#888;
+font-size:22px;
+padding:8px 0;
+}
+
+hr{
+border:1px solid #222;
+margin:25px 0;
+}
+
+.not-found{
+font-size:32px;
+color:white;
+margin-top:20px;
+}
+
 </style>
 </head>
 
@@ -59,63 +122,132 @@ button{
 
 <h1>RKAYSOURCEDITT™<br>Order Tracking</h1>
 
-<input type="text" id="trackingInput" placeholder="Enter Tracking Number">
+<input
+type="text"
+id="trackingInput"
+placeholder="Enter Tracking Number">
+
 <br>
-<button onclick="trackOrder()">Track Order</button>
+
+<button onclick="trackOrder()">
+Track Order
+</button>
 
 <div id="result"></div>
 
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDFtovyPYAdrJ91m3yHopMnJvH_qxBZW6M",
-  authDomain: "trackflow-d3351.firebaseapp.com",
-  projectId: "trackflow-d3351",
-  storageBucket: "trackflow-d3351.firebasestorage.app",
-  messagingSenderId: "630449629739",
-  appId: "1:630449629739:web:f3bc1bc546134170f5186e",
-  measurementId: "G-5WSYVW9JTP"
+apiKey: "AIzaSyDFtovyPYAdrJ91m3yHopMnJvH_qxBZW6M",
+authDomain: "trackflow-d3351.firebaseapp.com",
+projectId: "trackflow-d3351",
+storageBucket: "trackflow-d3351.firebasestorage.app",
+messagingSenderId: "630449629739",
+appId: "1:630449629739:web:f3bc1bc546134170f5186e",
+measurementId: "G-5WSYVW9JTP"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.trackOrder = async function() {
+window.trackOrder = async function(){
 
-    const tracking = document.getElementById("trackingInput").value.trim();
+const tracking =
+document.getElementById("trackingInput").value.trim();
 
-    if(!tracking){
-        document.getElementById("result").innerHTML =
-        "<h2>Please enter a tracking number</h2>";
-        return;
-    }
+if(!tracking){
 
-    const docRef = doc(db, "tracking", tracking);
-    const docSnap = await getDoc(docRef);
+document.getElementById("result").innerHTML = `
+<h2>Please Enter A Tracking Number</h2>
+`;
 
-    if(docSnap.exists()){
-
-        const data = docSnap.data();
-
-        document.getElementById("result").innerHTML = `
-        <div class="card">
-            <h2>${tracking}</h2>
-            <p><strong>Status:</strong> ${data.Status}</p>
-            <p><strong>Courier:</strong> ${data.Courier}</p>
-            <p><strong>Estimated Delivery:</strong> ${data["Estimate Delivery"]}</p>
-            <p><strong>Last Update:</strong> ${data.Lastupdate}</p>
-        </div>
-        `;
-
-    } else {
-
-        document.getElementById("result").innerHTML =
-        "<h2>Tracking Number Not Found</h2>";
-
-    }
+return;
 }
+
+const docRef = doc(db,"tracking",tracking);
+const docSnap = await getDoc(docRef);
+
+if(docSnap.exists()){
+
+const data = docSnap.data();
+
+document.getElementById("result").innerHTML = `
+
+<div class="card">
+
+<div class="order-found">
+📦 Order Found
+</div>
+
+<div class="tracking-number">
+${tracking}
+</div>
+
+<hr>
+
+<div class="info">
+📋 <strong>Status:</strong> ${data.Status}
+</div>
+
+<div class="info">
+🚚 <strong>Courier:</strong> ${data.Courier}
+</div>
+
+<div class="info">
+📅 <strong>Estimated Delivery:</strong> ${data["Estimate Delivery"]}
+</div>
+
+<div class="info">
+📍 <strong>Last Update:</strong> ${data.Lastupdate}
+</div>
+
+<hr>
+
+<h2>Tracking Progress</h2>
+
+<div class="progress">
+
+<div class="complete">
+✓ Order Received
+</div>
+
+<div class="complete">
+✓ Processing
+</div>
+
+<div class="pending">
+○ Shipped
+</div>
+
+<div class="pending">
+○ Out For Delivery
+</div>
+
+<div class="pending">
+○ Delivered
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}else{
+
+document.getElementById("result").innerHTML = `
+<div class="not-found">
+❌ Tracking Number Not Found
+</div>
+`;
+
+}
+
+}
+
 </script>
 
 </body>
