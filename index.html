@@ -11,13 +11,37 @@
 
   <div id="result"></div>
 
-  <script>
-    function trackOrder() {
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "trackflow-d3351.firebaseapp.com",
+      projectId: "trackflow-d3351",
+      storageBucket: "trackflow-d3351.firebasestorage.app",
+      messagingSenderId: "630449629739",
+      appId: "1:630449629739:web:f3bc1bc546134170f5186e",
+      measurementId: "G-5WSYVW9JTP"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.trackOrder = async function () {
       const tracking = document.getElementById("trackingInput").value;
 
-      if (tracking === "877277676135") {
-        document.getElementById("result").innerHTML =
-          "<h2>Status: Processing</h2><p>Courier: Evri</p>";
+      const docRef = doc(db, "tracking", tracking);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+
+        document.getElementById("result").innerHTML = `
+          <h2>Status: ${data.Status}</h2>
+          <p>Courier: ${data.Courier}</p>
+          <p>Last Update: ${data.Lastupdate}</p>
+        `;
       } else {
         document.getElementById("result").innerHTML =
           "<h2>Tracking number not found</h2>";
