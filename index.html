@@ -74,7 +74,9 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 window.trackOrder = async function () {
-
+  document.getElementById("result").innerHTML =
+    "<h2>Button works</h2>";
+    
     const tracking = document.getElementById("trackingInput").value.trim();
 
     const docRef = doc(db, "tracking", tracking);
